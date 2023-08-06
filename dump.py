@@ -77,6 +77,9 @@ def saveToCSV(array, file):
 def readFromCSV(file):
     # Читаем данные из файла
     with open("notes.csv", "r", encoding="utf8") as file:
+        if FileExistsError:
+            print("Файл не найден")
+            notes_from = []
         reader = csv.reader(file, delimiter=";")
         notes_from = []
         next(reader)  # Пропускаем заголовки столбцов

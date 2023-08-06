@@ -1,18 +1,16 @@
-﻿# from main_notes import *
-import os
+﻿import os
 from datetime import datetime
-
-# from main_notes import *
-
 from Note import Note
 
 
+# -------------- вывод рабочего списка в консоль ------------------------
 def printArray(arr):
     for i in range(0, len(arr)):
         outString(arr[i])
         print()
 
 
+# -------------- сборка строки из рабочего списка для вывода в консоль ------------------------
 def outString(n_):
     print(
         "id:"
@@ -26,9 +24,9 @@ def outString(n_):
         + "  Заметка: "
         + str(n_.body)
     )
-    # print(str(n_.title) + str(n_.body))
 
 
+# -------------- редактирование заметки ------------------------
 def editNote(item):
     newTitle = input("Введите новое название заголовка: ")
     newBody = input("Введите новый текст заметки: ")
@@ -38,6 +36,7 @@ def editNote(item):
     return item
 
 
+# -------------- удаление заметки ------------------------
 def removeNote(arr, id):
     newArr = []
     for i in range(0, len(arr)):
@@ -47,6 +46,7 @@ def removeNote(arr, id):
     return newArr
 
 
+# -------------- добавление заметки ------------------------
 def addNote(arr):
     newTitle = input("Введите заголовок новой заметки: ")
     newBody = input("Введите текст новой заметки: ")
@@ -71,6 +71,7 @@ def addNote(arr):
     return arr
 
 
+# -------------- перестроение рабочего списка (коррекция поля Note.id) ------------------------
 def rebuildArr(arr):
     workId = 0
     for i in range(0, len(arr)):
@@ -79,30 +80,26 @@ def rebuildArr(arr):
     return arr
 
 
+# -------------- поиск заметки ------------------------------------------------------
+# (значения всех полей экземпляра Note собираются в одну строку, далее идет поиск вхождения поискового шаблона в строку)
 def findNote(arr):
-    findStr = input(
-        "Введите id или любую часть содержимого заметки, несколько символов: "
+    findStr = str(
+        input("Введите id или любую часть содержимого заметки, несколько символов: ")
     )
-    # print(findStr)
+    # print("findStr = " + findStr)
     tempStr = ""
     tempArr = []
-    # print(type(arr))
     for i in range(0, len(arr)):
         tempStr += str(arr[i].id) + " "
         tempStr += arr[i].title + " "
         tempStr += arr[i].body + " "
         tempStr += arr[i].date_mark + " "
         tempStr += arr[i].time_mark + " "
-        # print(arr[i])
-        # print(
-        #     "findStr.lower() = "
-        #     + findStr.lower()
-        #     + "  tempStr.lower() = "
-        #     + tempStr.lower()
-        # )
+
         if findStr.lower() in tempStr.lower():
             tempArr.append(arr[i])
         tempStr = ""
+
     if len(tempArr) > 0:
         print("Найдено " + str(len(tempArr)) + " похожих записей:")
 
@@ -121,7 +118,7 @@ def findNote(arr):
                 + tempArr[i].time_mark
                 + " "
             )
-            print()
+            # print()
         findId = input("Введите id нужной заметки (цифра в начале строки): ")
         print("Выбрано: ")
         outString(tempArr[i])
@@ -134,7 +131,6 @@ def findNote(arr):
                     print("'1' - Редактировать")
                     print("'2' - Удалить")
                     print("Клавиша 'Enter' - Выйти из редактирования")
-                    # print("Q/q. ")
                     action = input("Ваш выбор: ")
                     if action == "1":
                         arr[i] = editNote(arr[i])
@@ -143,7 +139,6 @@ def findNote(arr):
                         arr = removeNote(arr, arr[i].id)
                         printArray(arr)
                         out = True
-                        # print("Нет пока такой функции, но мы работаем над этим")
                     elif action == "":
                         out = True
                     else:
@@ -154,11 +149,12 @@ def findNote(arr):
     return arr
 
 
+# --------------------------- метод приостановки программы ------------------------
 def pauseIt():
-    # choice = input("Ваш выбор: ")
     str = input("...... press any key, please ...............")
 
 
+# --------------------------- формирование начального меню ------------------------
 def promptMenu():
     print("==================================================")
     print("Выберите пункт меню, нажав соответствующую цифру и Enter.")
@@ -166,28 +162,25 @@ def promptMenu():
     print("2. Вывести полный список заметок")
     print("3. Добавить новую заметку")
     print("Q/q - Выйти из программы")
-    # return strPr
 
 
+# ======================================================================================================
 # Функция главного меню ==================================
+# принимает рабочий список, внутри модуля вся работа ведется с ним
 def main_Menu(fileContent):
-    print("================ вошли в главное меню ======================")
     tempList = list()
     promptMenu()
-    # print(prompt())
     getOut = False  # флаг для выхода из меню
     while getOut != True:
-        # os.system("CLS")
-        # printArray(fileContent)
+        os.system("CLS")
+        printArray(fileContent)
 
         promptMenu()
         choice = input("Ваш выбор: ")
         choice = choice.lower()
         print(choice)
-        # pauseIt()
         if choice == "Q" or choice == "q" or choice == "й" or choice == "Й":
             getOut = True
-            # saveFile(fileContent, "phones.txt")
             print()
             print("Дело хозяйское... До новых встреч!")
             print()
@@ -199,10 +192,5 @@ def main_Menu(fileContent):
 
         if choice == "3":
             fileContent = addNote(fileContent)
-
-        # if choice == "4":
-        # saveFile(fileContent, "phones.txt")
-
-        # print(choice)
 
     return fileContent
