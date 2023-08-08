@@ -28,18 +28,20 @@ def outString(n_):
 
 
 # -------------- редактирование заметки ------------------------
-def editNote(item):
+def editNote(arr, item):
     newTitle = input("Введите новое название заголовка: ")
     newBody = input("Введите новый текст заметки: ")
     item.title = newTitle
     item.body = newBody
-    item = rebuildArr(item)
-    return item
+    arr = rebuildArr(arr)
+    return arr
 
 
 # -------------- удаление заметки ------------------------
 def removeNote(arr, id):
-    print("================== зашли в removeNote ==========")
+    # print("================== зашли в removeNote ==========")
+    # index = int(id) - 1
+    # newArr = arr.pop(index)
     newArr = []
     for i in range(0, len(arr)):
         if arr[i].id != id:
@@ -52,7 +54,7 @@ def removeNote(arr, id):
             )
             newArr.append(arr[i])
     printArray(newArr)
-    newArr = rebuildArr(newArr)
+    # newArr = rebuildArr(newArr)
     print("/////////////////////////////// печать после перестройки в removeNote(): ")
     printArray(newArr)
     return newArr
@@ -153,7 +155,7 @@ def findNote(arr):
                     print("Клавиша 'Enter' - Выйти из редактирования")
                     action = input("Ваш выбор: ")
                     if action == "1":
-                        arr[i] = editNote(arr[i])
+                        arr = editNote(arr, arr[i])
                         out = True
                     elif action == "2":
                         arr = removeNote(arr, arr[i].id)
