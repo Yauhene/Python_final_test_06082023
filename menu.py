@@ -37,11 +37,8 @@ def editNote(arr, item):
     return arr
 
 
-# -------------- удаление заметки ------------------------
+# -------------- удаление заметки старая версия ------------------------
 def removeNote(arr, id):
-    # print("================== зашли в removeNote ==========")
-    # index = int(id) - 1
-    # newArr = arr.pop(index)
     newArr = []
     for i in range(0, len(arr)):
         if arr[i].id != id:
@@ -97,6 +94,7 @@ def rebuildArr(arr):
 # -------------- поиск заметки ------------------------------------------------------
 # (значения всех полей экземпляра Note собираются в одну строку, далее идет поиск вхождения поискового шаблона в строку)
 def findNote(arr):
+    index = -1
     findStr = str(
         input("Введите id или любую часть содержимого заметки, несколько символов: ")
     )
@@ -145,31 +143,37 @@ def findNote(arr):
             printArray(arr)
             for i in range(0, len(arr)):
                 print("~~~~~~~~~~~~~~~~~~~~~~~~~ ", "len(arr) now is ", len(arr))
-
                 if findId == arr[i].id:
+                    index = i
                     print("i = ", i, " findId = ", findId, "  arr[i].id = ", arr[i].id)
-                    print(findId == arr[i].id, "---------------------------------")
-                    print("Ведите цифру, соответствующую необходимому действию,")
-                    print("'1' - Редактировать")
-                    print("'2' - Удалить")
-                    print("Клавиша 'Enter' - Выйти из редактирования")
-                    action = input("Ваш выбор: ")
-                    if action == "1":
-                        arr = editNote(arr, arr[i])
-                        out = True
-                    elif action == "2":
-                        arr = removeNote(arr, arr[i].id)
-                        print(
-                            "++++++++++++++++++++++++++++++++    печать после выполнения removeNote"
-                        )
-                        printArray(arr)
-                        print("len(arr) = ", len(arr))
-                        out = True
-                    elif action == "":
-                        out = True
-                    else:
-                        print("Что-то пошло не так")
-                    break
+
+            print(findId == arr[i].id, "---------------------------------")
+            print("Ведите цифру, соответствующую необходимому действию,")
+            print("'1' - Редактировать")
+            print("'2' - Удалить")
+            print("Клавиша 'Enter' - Выйти из редактирования")
+            action = input("Ваш выбор: ")
+            if action == "1":
+                arr = editNote(arr, arr[i])
+                out = True
+            elif action == "2":
+                # старый код ---------------------------------------------------------------------------------------------------------------------
+                # arr = removeNote(arr, arr[i].id)
+                # index = i
+                arr.pop(index)
+                rebuildArr
+                print(
+                    "++++++++++++++++++++++++++++++++    печать после выполнения removeNote"
+                )
+                printArray(arr)
+                print("len(arr) = ", len(arr))
+                out = True
+
+            elif action == "":
+                out = True
+            else:
+                print("Что-то пошло не так")
+            break
     else:
         print("Похожих записей не найдено")
     pauseIt()
