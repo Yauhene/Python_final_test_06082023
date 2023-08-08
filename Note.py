@@ -10,7 +10,6 @@ class Note:
         self.title = title
         self.id = id
         self.date_mark = date_mark
-
         self.time_mark = time_mark
         self.body = body
 

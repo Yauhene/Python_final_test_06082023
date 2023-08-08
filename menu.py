@@ -3,11 +3,18 @@ from datetime import datetime
 from Note import Note
 
 
+index = -1
+
+
 # -------------- вывод рабочего списка в консоль ------------------------
 def printArray(arr):
+    print()
+    print(
+        "======================================================================================================="
+    )
     for i in range(0, len(arr)):
         outString(arr[i])
-        print("i = ", i)
+        # print("i = ", i)
 
 
 # -------------- сборка строки из рабочего списка для вывода в консоль ------------------------
@@ -17,14 +24,13 @@ def outString(n_):
         str(n_.id),
         "  ",
         str(n_.date_mark),
-        " З",
+        "  ",
         str(n_.time_mark),
         " Заголовок: ",
         str(n_.title),
         "  Заметка: ",
         str(n_.body),
     )
-    # print("----------------- отпечатались из outString -----------------------")
 
 
 # -------------- редактирование заметки ------------------------
@@ -37,27 +43,8 @@ def editNote(arr, item):
     return arr
 
 
-# -------------- удаление заметки старая версия ------------------------
-def removeNote(arr, id):
-    newArr = []
-    for i in range(0, len(arr)):
-        if arr[i].id != id:
-            print(
-                "i = ",
-                i,
-                "arr[i].id = ",
-                arr[i].id,
-                "----------- это из  'if arr[i].id != id:' ",
-            )
-            newArr.append(arr[i])
-    printArray(newArr)
-    # newArr = rebuildArr(newArr)
-    print("/////////////////////////////// печать после перестройки в removeNote(): ")
-    printArray(newArr)
-    return newArr
-
-
 # -------------- добавление заметки ------------------------
+# дата и время сохраняются в строковом виде dd.mm.yyyy и hh:mm:ss
 def addNote(arr):
     newTitle = input("Введите заголовок новой заметки: ")
     newBody = input("Введите текст новой заметки: ")
@@ -67,10 +54,9 @@ def addNote(arr):
         + str("{:02d}".format(datetime.now().month))
         + "."
         + str("{:4d}".format(datetime.now().year))
-        + "  "
     )
     newTime_mark = (
-        str(datetime.now().hour)
+        str("{:02d}".format(datetime.now().hour))
         + ":"
         + str(datetime.now().minute)
         + ":"
@@ -82,7 +68,7 @@ def addNote(arr):
     return arr
 
 
-# -------------- перестроение рабочего списка (коррекция поля Note.id) ------------------------
+# -------------- перестроение рабочего списка (коррекция полей Note.id) ------------------------
 def rebuildArr(arr):
     workId = 0
     for i in range(0, len(arr)):
@@ -91,14 +77,17 @@ def rebuildArr(arr):
     return arr
 
 
-# -------------- поиск заметки ------------------------------------------------------
-# (значения всех полей экземпляра Note собираются в одну строку, далее идет поиск вхождения поискового шаблона в строку)
+# -------------- поиск индекса заметки ------------------------------------------------------
+# (значения всех полей экземпляра Note собираются в одну строку, далее идет поиск вхождения поискового шаблона в строку
+# и по введенному пользователем id метод возвращает индекс записи в главном рабочем списке)
 def findNote(arr):
     index = -1
+    print()
     findStr = str(
-        input("Введите id или любую часть содержимого заметки, несколько символов: ")
+        input(
+            "Введите любую часть содержимого заметки (из любого поля, включая дату или время ), несколько символов: "
+        )
     )
-    # print("findStr = " + findStr)
     tempStr = ""
     tempArr = []
     for i in range(0, len(arr)):
@@ -112,6 +101,7 @@ def findNote(arr):
             tempArr.append(arr[i])
         tempStr = ""
 
+    print()
     if len(tempArr) > 0:
         print("Найдено " + str(len(tempArr)) + " похожих записей:")
 
@@ -127,66 +117,36 @@ def findNote(arr):
                 tempArr[i].date_mark,
                 " ",
                 tempArr[i].time_mark,
-                " ",
+                # " ",
             )
-            # print()
+        print()
         findId = input("Введите id нужной заметки (цифра в начале строки): ")
-        # print("type(findId) = ", type(findId))
-        print("Выбрано: ", findId)
-
-        # outString(tempArr[findId])
         out = False
-        while out != True:
-            print(
-                "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
-            )
-            printArray(arr)
-            for i in range(0, len(arr)):
-                print("~~~~~~~~~~~~~~~~~~~~~~~~~ ", "len(arr) now is ", len(arr))
-                if findId == arr[i].id:
-                    index = i
-                    print("i = ", i, " findId = ", findId, "  arr[i].id = ", arr[i].id)
+        for i in range(0, len(arr)):
+            if findId == str(arr[i].id):
+                index = i
+                break
+        if index == -1:
+            print("Заметка с таким id не найдена")
+            pauseIt()
+            # break
 
-            print(findId == arr[i].id, "---------------------------------")
-            print("Ведите цифру, соответствующую необходимому действию,")
-            print("'1' - Редактировать")
-            print("'2' - Удалить")
-            print("Клавиша 'Enter' - Выйти из редактирования")
-            action = input("Ваш выбор: ")
-            if action == "1":
-                arr = editNote(arr, arr[i])
-                out = True
-            elif action == "2":
-                # старый код ---------------------------------------------------------------------------------------------------------------------
-                # arr = removeNote(arr, arr[i].id)
-                # index = i
-                arr.pop(index)
-                rebuildArr
-                print(
-                    "++++++++++++++++++++++++++++++++    печать после выполнения removeNote"
-                )
-                printArray(arr)
-                print("len(arr) = ", len(arr))
-                out = True
-
-            elif action == "":
-                out = True
-            else:
-                print("Что-то пошло не так")
-            break
     else:
         print("Похожих записей не найдено")
-    pauseIt()
-    return arr
+        pauseIt()
+    return index
 
 
 # --------------------------- метод приостановки программы ------------------------
 def pauseIt():
-    str = input("...... press any key, please ...............")
+    str = input("...... press 'Enter', please ...............")
 
 
 # --------------------------- формирование начального меню ------------------------
 def promptMenu():
+    print()
+    print()
+    print()
     print("==================================================")
     print("Выберите пункт меню, нажав соответствующую цифру и Enter.")
     print("1. Найти заметку/Изменить заметку/Удалить заметку")
@@ -195,28 +155,69 @@ def promptMenu():
     print("Q/q - Выйти из программы")
 
 
+# "Перемотка" экрана
+def scrollIt():
+    for i in range(0, 50):
+        print()
+
+
 # ======================================================================================================
 # Функция главного меню ==================================
 # принимает рабочий список, внутри модуля вся работа ведется с ним
 def main_Menu(fileContent):
     tempList = list()
-    promptMenu()
     getOut = False  # флаг для выхода из меню
     while getOut != True:
-        # os.system("CLS")
+        scrollIt()
+        os.system("CLS")
         printArray(fileContent)
 
         promptMenu()
         choice = input("Ваш выбор: ")
         choice = choice.lower()
-        print(choice)
         if choice == "Q" or choice == "q" or choice == "й" or choice == "Й":
             getOut = True
             print()
             print("Дело хозяйское... До новых встреч!")
             print()
         if choice == "1":
-            fileContent = findNote(fileContent)
+            index = findNote(fileContent)
+            if index != -1:
+                print()
+                print(
+                    "Выбрана запись: ",
+                    "id: ",
+                    str(fileContent[index].id),
+                    "  ",
+                    str(fileContent[index].date_mark),
+                    "  ",
+                    str(fileContent[index].time_mark),
+                    " Заголовок: ",
+                    str(fileContent[index].title),
+                    "  Заметка: ",
+                    str(fileContent[index].body),
+                )
+                print()
+                print("Ведите цифру, соответствующую необходимому действию,")
+                print("'1' - Редактировать")
+                print("'2' - Удалить")
+                print("Клавиша 'Enter' - Выйти из редактирования")
+                action = input("Ваш выбор: ")
+                print()
+                if action == "1":
+                    arr = editNote(fileContent, fileContent[index])
+                    printArray(fileContent)
+                elif action == "2":
+                    fileContent.pop(index)
+                    rebuildArr(fileContent)
+                    printArray(fileContent)
+                    print("len(fileContent) = ", len(fileContent))
+                elif action == "":
+                    getOut = True
+                else:
+                    print("Что-то пошло не так")
+                    pauseIt()
+                    break
 
         if choice == "2":
             printArray(fileContent)

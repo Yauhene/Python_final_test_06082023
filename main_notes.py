@@ -7,10 +7,13 @@ import os
 # =================== Основной блок =================================
 
 os.system("CLS")
+print()
+print()
+print()
+print()
 
 work_array = readFromCSV("notes.csv")
 saveToCSV(work_array, "notes.bak")
-print("Всего заметок: " + str(len(work_array)))
 print()
 work_array = main_Menu(work_array)
 saveToCSV(work_array, "notes.csv")
