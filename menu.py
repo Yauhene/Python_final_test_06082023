@@ -7,23 +7,24 @@ from Note import Note
 def printArray(arr):
     for i in range(0, len(arr)):
         outString(arr[i])
-        print()
+        print("i = ", i)
 
 
 # -------------- сборка строки из рабочего списка для вывода в консоль ------------------------
 def outString(n_):
     print(
-        "id:"
-        + str(n_.id)
-        + " "
-        + str(n_.date_mark)
-        + " "
-        + str(n_.time_mark)
-        + " Заголовок: "
-        + str(n_.title)
-        + "  Заметка: "
-        + str(n_.body)
+        "id: ",
+        str(n_.id),
+        "  ",
+        str(n_.date_mark),
+        " З",
+        str(n_.time_mark),
+        " Заголовок: ",
+        str(n_.title),
+        "  Заметка: ",
+        str(n_.body),
     )
+    # print("----------------- отпечатались из outString -----------------------")
 
 
 # -------------- редактирование заметки ------------------------
@@ -38,11 +39,22 @@ def editNote(item):
 
 # -------------- удаление заметки ------------------------
 def removeNote(arr, id):
+    print("================== зашли в removeNote ==========")
     newArr = []
     for i in range(0, len(arr)):
         if arr[i].id != id:
+            print(
+                "i = ",
+                i,
+                "arr[i].id = ",
+                arr[i].id,
+                "----------- это из  'if arr[i].id != id:' ",
+            )
             newArr.append(arr[i])
-            newArr = rebuildArr(newArr)
+    printArray(newArr)
+    newArr = rebuildArr(newArr)
+    print("/////////////////////////////// печать после перестройки в removeNote(): ")
+    printArray(newArr)
     return newArr
 
 
@@ -75,8 +87,8 @@ def addNote(arr):
 def rebuildArr(arr):
     workId = 0
     for i in range(0, len(arr)):
-        workId += 1
-        arr[i].id = workId
+        # workId += 1
+        arr[i].id = i + 1
     return arr
 
 
@@ -105,28 +117,36 @@ def findNote(arr):
 
         for i in range(0, len(tempArr)):
             print(
-                "id: "
-                + tempArr[i].id
-                + " "
-                + " "
-                + tempArr[i].title
-                + " "
-                + tempArr[i].body
-                + " "
-                + tempArr[i].date_mark
-                + " "
-                + tempArr[i].time_mark
-                + " "
+                "id: ",
+                tempArr[i].id,
+                " ",
+                tempArr[i].title,
+                " ",
+                tempArr[i].body,
+                " ",
+                tempArr[i].date_mark,
+                " ",
+                tempArr[i].time_mark,
+                " ",
             )
             # print()
         findId = input("Введите id нужной заметки (цифра в начале строки): ")
-        print("Выбрано: ")
-        outString(tempArr[i])
+        # print("type(findId) = ", type(findId))
+        print("Выбрано: ", findId)
+
+        # outString(tempArr[findId])
         out = False
         while out != True:
-            print()
+            print(
+                "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"
+            )
+            printArray(arr)
             for i in range(0, len(arr)):
+                print("~~~~~~~~~~~~~~~~~~~~~~~~~ ", "len(arr) now is ", len(arr))
+
                 if findId == arr[i].id:
+                    print("i = ", i, " findId = ", findId, "  arr[i].id = ", arr[i].id)
+                    print(findId == arr[i].id, "---------------------------------")
                     print("Ведите цифру, соответствующую необходимому действию,")
                     print("'1' - Редактировать")
                     print("'2' - Удалить")
@@ -137,12 +157,17 @@ def findNote(arr):
                         out = True
                     elif action == "2":
                         arr = removeNote(arr, arr[i].id)
+                        print(
+                            "++++++++++++++++++++++++++++++++    печать после выполнения removeNote"
+                        )
                         printArray(arr)
+                        print("len(arr) = ", len(arr))
                         out = True
                     elif action == "":
                         out = True
                     else:
                         print("Что-то пошло не так")
+                    break
     else:
         print("Похожих записей не найдено")
     pauseIt()
@@ -172,7 +197,7 @@ def main_Menu(fileContent):
     promptMenu()
     getOut = False  # флаг для выхода из меню
     while getOut != True:
-        os.system("CLS")
+        # os.system("CLS")
         printArray(fileContent)
 
         promptMenu()

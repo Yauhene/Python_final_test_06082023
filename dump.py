@@ -1,6 +1,8 @@
-import json
+# import json
 from Note import Note
 import csv
+import pathlib
+from pathlib import Path
 
 
 # class Test:
@@ -49,7 +51,9 @@ def makeArray(count):
 
 def saveToCSV(array, file):
     # Записываем массив экземпляров Note в файл с разделителем ';'
-    with open(file, "w", encoding="utf8", newline="") as file:
+    dir_path = pathlib.Path.cwd()
+    filePath = Path(dir_path, file)
+    with open(filePath, "w", encoding="utf8", newline="") as file:
         writer = csv.writer(file, delimiter=";")
         writer.writerow(["id", "title", "body", "date_mark", "time_mark"])
         # Записываем заголовки столбцов
@@ -76,7 +80,9 @@ def saveToCSV(array, file):
 
 def readFromCSV(file):
     # Читаем данные из файла
-    with open("notes.csv", "r", encoding="utf8") as file:
+    dir_path = pathlib.Path.cwd()
+    filePath = Path(dir_path, file)
+    with open(filePath, "r", encoding="utf8") as file:
         if FileExistsError:
             print("Файл не найден")
             notes_from = []
